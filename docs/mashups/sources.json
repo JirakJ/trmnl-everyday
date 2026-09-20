@@ -1,0 +1,68 @@
+{
+  "description": "Synthetic demo HTML snapshots from the standalone plugin builds. No private data.",
+  "plugins": {
+    "trmnl-workday-windows": {
+      "repository": "https://github.com/JirakJ/trmnl-workday-windows",
+      "commit": "ec72ee82190a0217dedc92ad2da252d75f057e17",
+      "views": [
+        "half_vertical",
+        "half_horizontal",
+        "quadrant"
+      ]
+    },
+    "trmnl-outside-window": {
+      "repository": "https://github.com/JirakJ/trmnl-outside-window",
+      "commit": "c564184eeaae4811780d60313ebe999f1315581f",
+      "views": [
+        "half_vertical",
+        "half_horizontal",
+        "quadrant"
+      ]
+    },
+    "trmnl-digital-product-sales": {
+      "repository": "https://github.com/JirakJ/trmnl-digital-product-sales",
+      "commit": "1bd4b23f941ec344320cc9fbf77e6ceb63a34f7b",
+      "views": [
+        "half_vertical",
+        "half_horizontal",
+        "quadrant"
+      ]
+    },
+    "trmnl-family-day": {
+      "repository": "https://github.com/JirakJ/trmnl-family-day",
+      "commit": "ee216e026d48172515f30afbcbfc2ad9db58b989",
+      "views": [
+        "half_vertical",
+        "half_horizontal",
+        "quadrant"
+      ]
+    },
+    "trmnl-shift-together": {
+      "repository": "https://github.com/JirakJ/trmnl-shift-together",
+      "commit": "6e7a014c2f59d96be6075c44cca66972064e5285",
+      "views": [
+        "half_vertical",
+        "half_horizontal",
+        "quadrant"
+      ]
+    },
+    "trmnl-homelab-watch": {
+      "repository": "https://github.com/JirakJ/trmnl-homelab-watch",
+      "commit": "d5143fc97b27858ada5977bf56e69a537f9b1f95",
+      "views": [
+        "half_vertical",
+        "half_horizontal",
+        "quadrant"
+      ]
+    },
+    "trmnl-home-maintenance": {
+      "repository": "https://github.com/JirakJ/trmnl-home-maintenance",
+      "commit": "a019a61ec8bf9c54b9632ec2b200578638878955",
+      "views": [
+        "half_vertical",
+        "half_horizontal",
+        "quadrant"
+      ]
+    }
+  }
+}

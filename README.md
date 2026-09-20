@@ -14,6 +14,14 @@ Use the repositories below for current installation instructions, issues and upd
 | [Digital Product Sales](https://github.com/JirakJ/trmnl-digital-product-sales) | New licenses, renewals and refunds from CSV | [v0.1.0](https://github.com/JirakJ/trmnl-digital-product-sales/releases/tag/v0.1.0) |
 | [Home Maintenance](https://github.com/JirakJ/trmnl-home-maintenance) | Recurring household tasks with QR confirmation | [v0.1.0](https://github.com/JirakJ/trmnl-home-maintenance/releases/tag/v0.1.0) |
 
+## Show several plugins together
+
+All seven plugins include half-screen and quarter-screen layouts for native TRMNL
+Mashups. Choose a [shared-screen preset](docs/mashups/README.md), follow the setup
+guide, or download the interactive preview to try your own arrangement.
+
+![Workday: calendar, weather and sales, with synthetic data](docs/mashups/work.png)
+
 ## Original combined source
 
 This repository retains the original combined implementation and Git history for

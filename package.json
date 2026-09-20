@@ -1,7 +1,9 @@
 {
   "private": true,
   "scripts": {
-    "check:layouts": "node scripts/check_layouts.cjs"
+    "check:layouts": "node scripts/check_layouts.cjs",
+    "check:mashups": "node scripts/check_mashups.cjs",
+    "update:mashups": "node scripts/update_mashup_preview.cjs"
   },
   "devDependencies": {
     "jsqr": "1.4.0",

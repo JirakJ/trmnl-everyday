@@ -3,7 +3,7 @@ project_type = "cli"
 languages = ["python", "node"]
 
 [commands]
-lint = "python3 -m compileall -q everyday tests && node --check scripts/check_layouts.cjs"
+lint = "python3 -m compileall -q everyday tests && node --check scripts/check_layouts.cjs && node --check scripts/check_mashups.cjs && node --check scripts/update_mashup_preview.cjs"
 build = "python3 scripts/build.py"
 test = "python3 -m unittest discover -s tests -v"
 smoke = "python3 -m everyday outside --demo"
