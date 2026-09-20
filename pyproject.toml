@@ -1,0 +1,17 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "trmnl-everyday"
+version = "0.1.0"
+description = "Seven useful, self-hosted TRMNL plugins"
+requires-python = ">=3.11"
+license = "MIT"
+dependencies = []
+
+[project.scripts]
+trmnl-everyday = "everyday.__main__:main"
+
+[tool.setuptools.packages.find]
+include = ["everyday*"]

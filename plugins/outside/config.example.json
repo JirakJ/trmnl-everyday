@@ -1,0 +1,13 @@
+{
+  "timezone": "Europe/Prague",
+  "city": "Prague",
+  "country_code": "CZ",
+  "latitude": 50.0755,
+  "longitude": 14.4378,
+  "activity": "walk",
+  "duration_minutes": 60,
+  "min_temperature": 5,
+  "max_temperature": 28,
+  "max_rain_probability": 30,
+  "max_wind_kmh": 25
+}

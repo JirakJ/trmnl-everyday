@@ -1,0 +1,30 @@
+{% if title %}
+<div class="layout layout--col gap--small">
+  <div class="flex flex--row flex--between w--full">
+    <span class="label label--small everyday-kicker">{{ hero_label | escape }}</span>
+    {% if demo %}<span class="label label--inverted">DEMO</span>{% endif %}
+  </div>
+  <div class="flex flex--row flex--between gap--medium w--full">
+    <span class="everyday-hero">{{ hero | escape }}</span>
+    <span class="description everyday-detail" data-clamp="2">{{ detail | escape }}</span>
+  </div>
+  {% if metrics.size > 0 %}
+  <div class="flex flex--row gap--large w--full">
+    {% for metric in metrics %}<div class="flex flex--col"><span class="value value--small">{{ metric.value | escape }}</span><span class="label label--small">{{ metric.label | escape }}</span></div>{% endfor %}
+  </div>
+  {% endif %}
+  <div class="flex flex--col gap--small w--full">
+    {% for row in rows limit: 6 %}
+    <div class="everyday-row flex flex--row gap--medium w--full">
+      <span class="label label--small">{{ row.time | escape }}</span>
+      <div class="flex flex--col"><span class="title title--small" data-clamp="1">{{ row.title | escape }}</span><span class="description" data-clamp="1">{{ row.detail | escape }}</span></div>
+    </div>
+    {% endfor %}
+  </div>
+  <span class="label label--small" data-clamp="1">{{ source | escape }}</span>
+</div>
+<div class="title_bar"><span class="title">{{ title | escape }}</span><span class="instance">{{ updated | escape }}</span></div>
+{% else %}
+<div class="layout layout--col layout--center"><span class="title">Connect your data</span><span class="description">Run the collector with your configuration.</span></div>
+<div class="title_bar"><span class="title">Outside Window</span></div>
+{% endif %}
