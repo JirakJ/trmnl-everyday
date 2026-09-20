@@ -1,0 +1,7 @@
+{
+  "timezone": "Europe/Prague",
+  "tomorrow_after_hour": 18,
+  "hide_private": true,
+  "calendars": [{"name": "Family", "url_env": "FAMILY_ICS_URL"}],
+  "assignments": [{"event": "School pickup", "pickup": "Alex", "bring": "Sports bag"}]
+}

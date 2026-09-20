@@ -9,6 +9,7 @@ The collector runs on your computer or home server; no account with us is needed
 | Plugin | Purpose |
 | --- | --- |
 | [Outside Window](plugins/outside) | Find a suitable time to walk, run or cycle |
+| [Family Day](plugins/family) | Shared agenda, pickups and tomorrow's essentials |
 
 ## Install
 
