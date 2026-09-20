@@ -4,6 +4,10 @@ Seven focused, open-source plugins for an e-paper display. Each plugin has its o
 importable TRMNL ZIP, four layouts, an offline demo, and a small data collector.
 The collector runs on your computer or home server; no account with us is needed.
 
+[Download the seven plugin ZIPs](https://github.com/JirakJ/trmnl-everyday/releases/latest)
+· [Running and scheduling](docs/RUNNING.md)
+· [Verification and current limits](docs/VERIFICATION.md)
+
 ## Plugins
 
 | Plugin | Purpose |
@@ -25,7 +29,7 @@ must run periodically on an always-on computer for automatic updates.
 git clone https://github.com/JirakJ/trmnl-everyday.git
 cd trmnl-everyday
 python3 -m venv .venv
-.venv/bin/pip install -e .
+.venv/bin/pip install -r requirements.lock -e .
 mkdir -p private
 chmod 700 private
 cp plugins/outside/config.example.json private/outside.json

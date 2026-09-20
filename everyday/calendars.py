@@ -3,12 +3,12 @@ import os
 from datetime import date, datetime, time, timedelta
 import icalendar
 import recurring_ical_events
-from .common import local_path, request, text
+from .common import ConfigurationError, local_path, request, text
 
 
 def parse(raw, owner, start, end, *, hide_private=True):
     if len(raw) > 5_000_000 or b"BEGIN:VCALENDAR" not in raw:
-        raise ValueError("Expected an ICS calendar under 5 MB")
+        raise ConfigurationError("Expected an ICS calendar under 5 MB")
     calendar = icalendar.Calendar.from_ical(raw)
     result = []
     for event in recurring_ical_events.of(calendar).between(start, end):
@@ -25,7 +25,7 @@ def parse(raw, owner, start, end, *, hide_private=True):
             return value.replace(tzinfo=start.tzinfo) if value.tzinfo is None else value.astimezone(start.tzinfo)
         begin, finish = aware(begin), aware(finish)
         if finish < begin:
-            raise ValueError("Calendar event ends before it starts")
+            raise ConfigurationError("Calendar event ends before it starts")
         if finish <= start or begin >= end:
             continue
         private = str(event.get("CLASS", "")).upper() in ("PRIVATE", "CONFIDENTIAL")
@@ -40,7 +40,7 @@ def parse(raw, owner, start, end, *, hide_private=True):
 def load(config, now, days=2):
     sources = config.get("calendars", [])
     if not isinstance(sources, list) or not 1 <= len(sources) <= 12:
-        raise ValueError("Configure 1–12 calendars")
+        raise ConfigurationError("Configure 1–12 calendars")
     start = now.replace(hour=0, minute=0, second=0, microsecond=0)
     result = []
     for source in sources:
@@ -49,9 +49,9 @@ def load(config, now, days=2):
         elif "file" in source:
             path = local_path(config, source["file"])
             if path.stat().st_size > 5_000_000:
-                raise ValueError("Calendar exceeds 5 MB")
+                raise ConfigurationError("Calendar exceeds 5 MB")
             raw = path.read_bytes()
         else:
-            raise ValueError("Each calendar needs file or url_env")
+            raise ConfigurationError("Each calendar needs file or url_env")
         result.extend(parse(raw, source.get("name", "Calendar"), start, start + timedelta(days=days), hide_private=config.get("hide_private", True)))
     return sorted(result, key=lambda event: event["start"])

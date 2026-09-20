@@ -5,7 +5,7 @@ import re
 from collections import defaultdict
 from datetime import datetime
 from decimal import Decimal, InvalidOperation
-from .common import local_path, number, screen, text
+from .common import ConfigurationError, local_path, number, screen, text
 
 FIELDS = ("id", "date", "product", "type", "licenses", "amount", "currency")
 
@@ -14,35 +14,35 @@ def transactions(raw, config, now):
     columns = {field: config.get("columns", {}).get(field, field) for field in FIELDS}
     delimiter = config.get("delimiter", ",")
     if not isinstance(delimiter, str) or len(delimiter) != 1:
-        raise ValueError("CSV delimiter must be one character")
+        raise ConfigurationError("CSV delimiter must be one character")
     reader = csv.DictReader(io.StringIO(raw.lstrip("\ufeff")), delimiter=delimiter)
     if not reader.fieldnames or len(set(reader.fieldnames)) != len(reader.fieldnames) or not set(columns.values()) <= set(reader.fieldnames):
-        raise ValueError("Missing or duplicate CSV columns; configure the column mapping")
+        raise ConfigurationError("Missing or duplicate CSV columns; configure the column mapping")
     types = {str(key).upper(): value for key, value in config.get("types", {"NEW": "new", "RENEW": "renew", "REFUND": "refund"}).items()}
     seen = {}
     for index, row in enumerate(reader):
         if index >= 50_000 or None in row:
-            raise ValueError("Too many rows or malformed CSV")
+            raise ConfigurationError("Too many rows or malformed CSV")
         values = {field: str(row.get(column) or "").strip() for field, column in columns.items()}
         if not all(values.values()) or len(values["id"]) > 256:
-            raise ValueError("Every transaction needs an ID and all required fields")
+            raise ConfigurationError("Every transaction needs an ID and all required fields")
         if values["id"] in seen:
             if seen[values["id"]] != values:
-                raise ValueError("Conflicting duplicate transaction ID")
+                raise ConfigurationError("Conflicting duplicate transaction ID")
             continue
         seen[values["id"]] = values
         kind = types.get(values["type"].upper())
         if kind not in ("new", "renew", "refund") or not re.fullmatch(r"[A-Z]{3}", values["currency"]):
-            raise ValueError("Unknown transaction type or invalid currency")
+            raise ConfigurationError("Unknown transaction type or invalid currency")
         quantity = int(values["licenses"])
         if not 1 <= quantity <= 100_000:
-            raise ValueError("License quantity must be a positive integer")
+            raise ConfigurationError("License quantity must be a positive integer")
         try:
             amount = Decimal(values["amount"])
         except InvalidOperation:
-            raise ValueError("Use a plain decimal amount without currency symbols") from None
+            raise ConfigurationError("Use a plain decimal amount without currency symbols") from None
         if not amount.is_finite() or abs(amount) > Decimal("1000000000") or (kind != "refund" and amount < 0):
-            raise ValueError("Invalid transaction amount")
+            raise ConfigurationError("Invalid transaction amount")
         when = (datetime.strptime(values["date"], config["date_format"]) if config.get("date_format")
                 else datetime.fromisoformat(values["date"].replace("Z", "+00:00")))
         if when.tzinfo is None:
@@ -55,7 +55,7 @@ def transactions(raw, config, now):
 def render(records, config, now, *, source, demo=False):
     currency = config["currency"]
     if not re.fullmatch(r"[A-Z]{3}", currency):
-        raise ValueError("Select one three-letter currency")
+        raise ConfigurationError("Select one three-letter currency")
     digits = int(number(config.get("money_decimals", 2), "money_decimals", 0, 4))
     selected = [row for row in records if row["when"].year == now.year and row["when"].month == now.month
                 and row["when"].timestamp() <= now.timestamp()
@@ -83,7 +83,7 @@ def render(records, config, now, *, source, demo=False):
 def collect(config, now):
     path = local_path(config, config["csv_file"])
     if path.stat().st_size > 5_000_000:
-        raise ValueError("CSV exceeds 5 MB")
+        raise ConfigurationError("CSV exceeds 5 MB")
     modified = datetime.fromtimestamp(path.stat().st_mtime, now.tzinfo)
     records = transactions(path.read_text(encoding="utf-8-sig"), config, now)
     return render(records, config, now, source=f"CSV file updated {modified:%d %b %H:%M}")

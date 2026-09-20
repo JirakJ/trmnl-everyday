@@ -1,7 +1,8 @@
 """Rank contiguous daylight windows, including every hour of the activity."""
 from datetime import datetime, timedelta
+import math
 from urllib.parse import urlencode
-from .common import UTC, get_json, number, screen, text
+from .common import ConfigurationError, UTC, get_json, number, screen, text
 
 PRESETS = {"walk": (0, 30, 25, 30), "run": (0, 25, 20, 25), "cycle": (5, 30, 20, 20)}
 
@@ -9,7 +10,7 @@ PRESETS = {"walk": (0, 30, 25, 30), "run": (0, 25, 20, 25), "cycle": (5, 30, 20,
 def windows(hourly, config, now):
     activity = config.get("activity", "walk")
     if activity not in PRESETS:
-        raise ValueError("Activity must be walk, run or cycle")
+        raise ConfigurationError("Activity must be walk, run or cycle")
     low, high, wind, rain = PRESETS[activity]
     low = number(config.get("min_temperature", low), "min_temperature", -40, 50)
     high = number(config.get("max_temperature", high), "max_temperature", low, 60)
@@ -19,7 +20,7 @@ def windows(hourly, config, now):
     fields = ("temperature_2m", "precipitation_probability", "wind_speed_10m", "is_day")
     times = hourly["time"]
     if any(len(hourly[key]) != len(times) for key in fields):
-        raise ValueError("Incomplete hourly forecast")
+        raise ConfigurationError("Incomplete hourly forecast")
     candidates = []
     needed = (duration + 59) // 60
     for i in range(len(times) - needed + 1):
@@ -29,6 +30,11 @@ def windows(hourly, config, now):
         values = [hourly[key][i:i + needed] for key in fields]
         temps, rains, winds, daylight = values
         if any(value is None for series in values for value in series):
+            continue
+        if any(isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value)
+               for series in (temps, rains, winds) for value in series):
+            continue
+        if any(not 0 <= value <= 100 for value in rains) or any(value < 0 for value in winds):
             continue
         if any(times[i + j] - times[i] != 3600 * j for j in range(needed)):
             continue
@@ -61,7 +67,7 @@ def render(hourly, config, now, city, *, demo=False):
 def collect(config, now):
     city = text(config.get("city", ""), 80)
     if not city:
-        raise ValueError("Set a city")
+        raise ConfigurationError("Set a city")
     if "latitude" in config and "longitude" in config:
         lat = number(config["latitude"], "latitude", -90, 90)
         lon = number(config["longitude"], "longitude", -180, 180)
@@ -71,7 +77,7 @@ def collect(config, now):
             query["countryCode"] = config["country_code"]
         locations = get_json("https://geocoding-api.open-meteo.com/v1/search?" + urlencode(query)).get("results", [])
         if len(locations) != 1:
-            raise ValueError("City is missing or ambiguous; set explicit latitude and longitude")
+            raise ConfigurationError("City is missing or ambiguous; set explicit latitude and longitude")
         lat, lon = locations[0]["latitude"], locations[0]["longitude"]
     query = {"latitude": lat, "longitude": lon, "hourly": "temperature_2m,precipitation_probability,wind_speed_10m,is_day",
              "forecast_days": 4, "timeformat": "unixtime", "timezone": "UTC", "wind_speed_unit": "kmh"}

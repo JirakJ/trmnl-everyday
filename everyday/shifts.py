@@ -1,23 +1,23 @@
 """Repeating shift rotas, date exceptions and genuinely shared days off."""
 from datetime import date, datetime, time, timedelta
-from .common import screen, text
+from .common import ConfigurationError, screen, text
 
 
 def shift(person, day, tz):
     cycle = person.get("cycle", [])
     definitions = person.get("shifts", {})
     if not cycle or len(cycle) > 366 or any(code not in definitions for code in cycle):
-        raise ValueError("Define a 1–366 day cycle using known shift codes")
+        raise ConfigurationError("Define a 1–366 day cycle using known shift codes")
     offset = (day - date.fromisoformat(person["anchor"])).days
     code = person.get("exceptions", {}).get(day.isoformat(), cycle[offset % len(cycle)])
     if code not in definitions:
-        raise ValueError("Exception references an unknown shift code")
+        raise ConfigurationError("Exception references an unknown shift code")
     definition = definitions[code]
     if definition is None:
         return None
     start_time, end_time = time.fromisoformat(definition["start"]), time.fromisoformat(definition["end"])
     if start_time.tzinfo or end_time.tzinfo or start_time == end_time:
-        raise ValueError("Shift hours must be distinct local times")
+        raise ConfigurationError("Shift hours must be distinct local times")
     start = datetime.combine(day, start_time, tz)
     end = datetime.combine(day + timedelta(days=int(end_time < start_time)), end_time, tz)
     return {"code": text(code, 12), "start": start, "end": end}
@@ -36,7 +36,7 @@ def day_off(person, day, tz):
 def collect(config, now, *, demo=False):
     people = config.get("people", [])
     if not isinstance(people, list) or not 1 <= len(people) <= 4:
-        raise ValueError("Configure 1–4 people")
+        raise ConfigurationError("Configure 1–4 people")
     next_duties = []
     for person in people:
         for i in range(-1, 57):

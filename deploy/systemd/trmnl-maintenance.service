@@ -1,0 +1,15 @@
+[Unit]
+Description=TRMNL Everyday private maintenance confirmations
+After=network.target
+
+[Service]
+User=trmnl
+WorkingDirectory=/opt/trmnl-everyday
+ExecStart=/opt/trmnl-everyday/.venv/bin/python -m everyday.maintenance_server --config private/maintenance.json
+Restart=on-failure
+RestartSec=5
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ReadWritePaths=/opt/trmnl-everyday/private

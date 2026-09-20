@@ -9,27 +9,27 @@ from contextlib import contextmanager
 from datetime import date, timedelta
 from urllib.parse import urlsplit
 import qrcode
-from .common import local_path, number, screen, text
+from .common import ConfigurationError, local_path, number, screen, text
 
 
 def tasks(config):
     items = config.get("tasks", [])
     if not isinstance(items, list) or not 1 <= len(items) <= 100:
-        raise ValueError("Configure 1–100 maintenance tasks")
+        raise ConfigurationError("Configure 1–100 maintenance tasks")
     seen = set()
     for task in items:
         key = task["id"]
         if not re.fullmatch(r"[a-z0-9_-]{1,40}", key) or key in seen or not task.get("name"):
-            raise ValueError("Tasks need unique simple IDs and names")
+            raise ConfigurationError("Tasks need unique simple IDs and names")
         seen.add(key)
         date.fromisoformat(task["last_done"])
         intervals = [field for field in ("interval_days", "interval_months") if field in task]
         if len(intervals) != 1:
-            raise ValueError("Use exactly one interval: days or months")
+            raise ConfigurationError("Use exactly one interval: days or months")
         value = task[intervals[0]]
         limit = 36500 if intervals[0] == "interval_days" else 1200
         if int(number(value, intervals[0], 1, limit)) != value:
-            raise ValueError("Maintenance intervals must be integers")
+            raise ConfigurationError("Maintenance intervals must be integers")
     return items
 
 
@@ -81,11 +81,11 @@ def base_url(config):
     value = config["confirmation_base_url"].rstrip("/")
     parsed = urlsplit(value)
     if parsed.scheme not in ("https", "http") or not parsed.hostname or parsed.username or parsed.password or parsed.path or parsed.query or parsed.fragment:
-        raise ValueError("Confirmation URL must be an HTTP(S) origin without a path")
+        raise ConfigurationError("Confirmation URL must be an HTTP(S) origin without a path")
     if parsed.scheme != "https" and not config.get("allow_http", False):
-        raise ValueError("Use HTTPS, or explicitly allow HTTP on a trusted local network")
+        raise ConfigurationError("Use HTTPS, or explicitly allow HTTP on a trusted local network")
     if len(value) > 100:
-        raise ValueError("Use a shorter confirmation hostname to keep the QR code readable")
+        raise ConfigurationError("Use a shorter confirmation hostname to keep the QR code readable")
     return value
 
 
@@ -100,12 +100,12 @@ def issue_link(db, config, task, now):
 
 def action_task(db, config, token, now):
     if not re.fullmatch(r"[A-Za-z0-9_-]{32}", token):
-        raise ValueError("Invalid or expired link")
+        raise ConfigurationError("Invalid or expired link")
     row = db.execute("SELECT task_id, baseline, expires FROM actions WHERE digest = ?",
                      (hashlib.sha256(token.encode()).hexdigest(),)).fetchone()
     task = next((item for item in tasks(config) if row and item["id"] == row[0]), None)
     if not task or row[2] <= now.timestamp() or not secrets.compare_digest(row[1], baseline(db, task)):
-        raise ValueError("Invalid or expired link")
+        raise ConfigurationError("Invalid or expired link")
     return task
 
 

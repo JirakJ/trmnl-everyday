@@ -3,12 +3,12 @@ import json
 import shutil
 import subprocess
 from datetime import timedelta
-from .common import instant, local_path, number, request, screen, text
+from .common import ConfigurationError, instant, local_path, number, request, screen, text
 
 
 def backup_status(snapshots, check, now):
     if not isinstance(snapshots, list):
-        raise ValueError("Expected a restic snapshots array")
+        raise ConfigurationError("Expected a restic snapshots array")
     if check.get("host"):
         snapshots = [item for item in snapshots if item.get("hostname") == check["host"]]
     if check.get("path"):
@@ -46,10 +46,10 @@ def run_check(check, config, now):
         else:
             path = local_path(config, check["file"])
             if path.stat().st_size > 5_000_000:
-                raise ValueError("Snapshot file exceeds 5 MB")
+                raise ConfigurationError("Snapshot file exceeds 5 MB")
             raw = path.read_bytes()
         return backup_status(json.loads(raw), check, now)
-    raise ValueError("Unknown homelab check kind")
+    raise ConfigurationError("Unknown homelab check kind")
 
 
 def render(results, now, *, demo=False):
@@ -63,7 +63,7 @@ def render(results, now, *, demo=False):
 def collect(config, now):
     checks = config.get("checks", [])
     if not isinstance(checks, list) or not 1 <= len(checks) <= 8:
-        raise ValueError("Configure 1–8 named checks")
+        raise ConfigurationError("Configure 1–8 named checks")
     results = []
     for check in checks:
         try:

@@ -14,6 +14,11 @@ class OutsideTests(unittest.TestCase):
         self.assertEqual([r["start"].hour for r in results], [10])
         hourly["temperature_2m"][2] = None
         self.assertEqual(windows(hourly, {"duration_minutes": 120}, now), [])
+        hourly["temperature_2m"][2] = float("nan")
+        self.assertEqual(windows(hourly, {"duration_minutes": 120}, now), [])
+        hourly["temperature_2m"][2] = 20
+        hourly["precipitation_probability"][2] = -1
+        self.assertEqual(windows(hourly, {"duration_minutes": 120}, now), [])
         self.assertLess(len(packet(demo(now))), 2000)
 
 

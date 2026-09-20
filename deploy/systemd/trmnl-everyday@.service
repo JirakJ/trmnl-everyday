@@ -1,0 +1,16 @@
+[Unit]
+Description=Update the TRMNL Everyday %i screen
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=oneshot
+User=trmnl
+WorkingDirectory=/opt/trmnl-everyday
+EnvironmentFile=/opt/trmnl-everyday/private/%i.env
+ExecStart=/opt/trmnl-everyday/.venv/bin/python -m everyday %i --config private/%i.json --push
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ReadWritePaths=/opt/trmnl-everyday/private

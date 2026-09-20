@@ -1,17 +1,17 @@
 """Compute available working time from the union of busy calendar intervals."""
 from datetime import datetime, time, timedelta
 from .calendars import load
-from .common import number, screen, text
+from .common import ConfigurationError, number, screen, text
 
 
 def plan(events, config, now):
     begin = time.fromisoformat(config.get("work_start", "09:00"))
     finish = time.fromisoformat(config.get("work_end", "17:00"))
     if begin.tzinfo or finish.tzinfo or finish <= begin:
-        raise ValueError("Work hours must be local times within one day")
+        raise ConfigurationError("Work hours must be local times within one day")
     weekdays = config.get("work_days", [0, 1, 2, 3, 4])
     if not weekdays or any(type(day) is not int or not 0 <= day <= 6 for day in weekdays):
-        raise ValueError("work_days must contain weekday numbers 0–6")
+        raise ConfigurationError("work_days must contain weekday numbers 0–6")
     minimum = number(config.get("minimum_free_minutes", 30), "minimum_free_minutes", 5, 480) * 60
     day = now.date()
     for _ in range(8):

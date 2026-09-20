@@ -2,7 +2,7 @@ import argparse
 import importlib
 import json
 import sys
-from .common import PLUGINS, clock, packet, push, read_config
+from .common import ConfigurationError, PLUGINS, clock, packet, push, read_config
 
 
 def main():
@@ -24,6 +24,9 @@ def main():
             print("TRMNL accepted the screen data.")
         else:
             print(json.dumps(data, ensure_ascii=False, indent=2))
+    except ConfigurationError as error:
+        print(f"Failed: {error}. No new screen was sent.", file=sys.stderr)
+        return 1
     except (ValueError, KeyError, TypeError, OSError) as error:
         # Source parsing can include private values; only known safe validation messages are displayed.
         print(f"Failed ({type(error).__name__}); check configuration and source availability. No new screen was sent.", file=sys.stderr)
