@@ -1,0 +1,9 @@
+{
+  "timezone": "Europe/Prague",
+  "csv_file": "sales.csv",
+  "currency": "EUR",
+  "money_decimals": 2,
+  "delimiter": ",",
+  "columns": {"id": "id", "date": "date", "product": "product", "type": "type", "licenses": "licenses", "amount": "amount", "currency": "currency"},
+  "types": {"NEW": "new", "RENEW": "renew", "REFUND": "refund"}
+}

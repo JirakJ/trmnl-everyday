@@ -1,0 +1,4 @@
+id,date,product,type,licenses,amount,currency
+example-1,2026-09-01,Example Product,NEW,2,38.00,EUR
+example-2,2026-09-02,Example Product,RENEW,1,15.00,EUR
+example-3,2026-09-03,Example Product,REFUND,1,19.00,EUR

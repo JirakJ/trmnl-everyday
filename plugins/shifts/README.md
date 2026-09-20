@@ -19,6 +19,6 @@ Define each code under `shifts`: `null` means no shift, otherwise provide local
 All people share the configured IANA time zone. Codes and names should be short
 to fit small displays. No external data service or API key is required for computation.
 
-The four-day list groups shifts by their starting date. A carry-over night shift
+The upcoming-days list groups shifts by their starting date. A carry-over night shift
 is also noted on the following day. Tests cover carry-over, exceptions, dates before
 the cycle anchor and a night spanning a daylight-saving transition.

@@ -10,7 +10,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
-PLUGINS = ("outside", "family", "workday", "shifts", "homelab")
+PLUGINS = ("outside", "family", "workday", "shifts", "homelab", "sales")
 UTC = timezone.utc
 
 
