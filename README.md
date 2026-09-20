@@ -11,6 +11,7 @@ The collector runs on your computer or home server; no account with us is needed
 | [Outside Window](plugins/outside) | Find a suitable time to walk, run or cycle |
 | [Family Day](plugins/family) | Shared agenda, pickups and tomorrow's essentials |
 | [Workday Windows](plugins/workday) | Find uninterrupted time between meetings |
+| [Shift Together](plugins/shifts) | Shift rotas, exceptions and shared time off |
 
 ## Install
 

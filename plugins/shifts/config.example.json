@@ -1,0 +1,13 @@
+{
+  "timezone": "Europe/Prague",
+  "people": [
+    {"name": "Alex", "anchor": "2026-09-01",
+     "cycle": ["Day", "Day", "Night", "Night", "Off", "Off", "Off", "Off"],
+     "shifts": {"Day": {"start": "07:00", "end": "19:00"}, "Night": {"start": "19:00", "end": "07:00"}, "Off": null},
+     "exceptions": {"2026-09-25": "Off"}},
+    {"name": "Sam", "anchor": "2026-09-02",
+     "cycle": ["Day", "Day", "Night", "Night", "Off", "Off", "Off", "Off"],
+     "shifts": {"Day": {"start": "07:00", "end": "19:00"}, "Night": {"start": "19:00", "end": "07:00"}, "Off": null},
+     "exceptions": {}}
+  ]
+}
