@@ -1,0 +1,8 @@
+{
+  "timezone": "Europe/Prague",
+  "checks": [
+    {"name": "System volume", "kind": "disk", "path": "/", "warn_used_percent": 85},
+    {"name": "NAS backup", "kind": "restic", "host": "nas", "max_age_hours": 26},
+    {"name": "Local service", "kind": "http", "url": "http://127.0.0.1:8123/", "allow_http": true}
+  ]
+}

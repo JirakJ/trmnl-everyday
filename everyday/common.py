@@ -10,7 +10,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
-PLUGINS = ("outside", "family", "workday", "shifts")
+PLUGINS = ("outside", "family", "workday", "shifts", "homelab")
 UTC = timezone.utc
 
 
@@ -40,12 +40,12 @@ class NoRedirect(urllib.request.HTTPRedirectHandler):
         raise ValueError("Redirect refused; configure the final HTTPS URL")
 
 
-def request(url, *, payload=None, headers=None, allow_http=False):
+def request(url, *, payload=None, headers=None, allow_http=False, method=None):
     parsed = urllib.parse.urlsplit(url)
     schemes = ("https", "http") if allow_http else ("https",)
     if parsed.scheme not in schemes or not parsed.hostname or parsed.username or parsed.password or parsed.fragment:
         raise ValueError("Use a valid HTTPS URL without embedded credentials")
-    req = urllib.request.Request(url, data=payload, headers={"User-Agent": "trmnl-everyday/0.1", **(headers or {})})
+    req = urllib.request.Request(url, data=payload, headers={"User-Agent": "trmnl-everyday/0.1", **(headers or {})}, method=method)
     try:
         with urllib.request.build_opener(NoRedirect).open(req, timeout=20) as response:
             data = response.read(5_000_001)

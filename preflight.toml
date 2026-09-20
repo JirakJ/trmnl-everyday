@@ -1,0 +1,17 @@
+schema_version = 1
+project_type = "cli"
+languages = ["python", "node"]
+
+[commands]
+lint = "python3 -m compileall -q everyday tests && node --check scripts/check_layouts.cjs"
+build = "python3 scripts/build.py"
+test = "python3 -m unittest discover -s tests -v"
+smoke = "python3 -m everyday outside --demo"
+
+[budgets]
+build_s = 240
+test_s = 120
+smoke_s = 30
+sast_s = 60
+deps_s = 60
+total_s = 600

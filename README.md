@@ -12,6 +12,7 @@ The collector runs on your computer or home server; no account with us is needed
 | [Family Day](plugins/family) | Shared agenda, pickups and tomorrow's essentials |
 | [Workday Windows](plugins/workday) | Find uninterrupted time between meetings |
 | [Shift Together](plugins/shifts) | Shift rotas, exceptions and shared time off |
+| [Homelab Watch](plugins/homelab) | Disk space, service health and backup freshness |
 
 ## Install
 
