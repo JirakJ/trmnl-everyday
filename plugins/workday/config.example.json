@@ -1,0 +1,10 @@
+{
+  "timezone": "Europe/Prague",
+  "calendars": [{"name": "Work", "url_env": "WORK_ICS_URL"}],
+  "work_start": "09:00",
+  "work_end": "17:00",
+  "work_days": [0, 1, 2, 3, 4],
+  "minimum_free_minutes": 30,
+  "hide_titles": true,
+  "hide_private": true
+}
