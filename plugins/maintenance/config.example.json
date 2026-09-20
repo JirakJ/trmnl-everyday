@@ -1,0 +1,12 @@
+{
+  "timezone": "Europe/Prague",
+  "state_file": "maintenance.sqlite3",
+  "confirmation_base_url": "http://127.0.0.1:8765",
+  "allow_http": true,
+  "tasks": [
+    {"id": "ventilation", "name": "Replace ventilation filter", "interval_months": 3, "last_done": "2026-06-17"},
+    {"id": "coffee", "name": "Descale coffee machine", "interval_days": 30, "last_done": "2026-08-21"},
+    {"id": "alarms", "name": "Check smoke alarms", "interval_months": 1, "last_done": "2026-08-26"},
+    {"id": "dishwasher", "name": "Clean dishwasher filter", "interval_days": 14, "last_done": "2026-09-18"}
+  ]
+}

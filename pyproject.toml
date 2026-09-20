@@ -8,7 +8,7 @@ version = "0.1.0"
 description = "Seven useful, self-hosted TRMNL plugins"
 requires-python = ">=3.11"
 license = "MIT"
-dependencies = ["recurring-ical-events==3.8.2", "icalendar==7.3.0"]
+dependencies = ["recurring-ical-events==3.8.2", "icalendar==7.3.0", "qrcode==8.2", "Flask==3.1.3", "waitress==3.0.2"]
 
 [project.scripts]
 trmnl-everyday = "everyday.__main__:main"

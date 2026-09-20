@@ -1,0 +1,13 @@
+{% if title %}
+<div class="layout layout--col gap--small">
+  <div class="flex flex--row flex--between w--full"><span class="label label--small">{{ hero_label | escape }}</span>{% if demo %}<span class="label label--inverted">DEMO</span>{% endif %}</div>
+<span class="everyday-hero">{{ hero | escape }}</span>
+<div class="flex flex--row gap--small w--full">
+<div class="flex flex--col gap--small">
+{% for row in rows limit: 4 %}
+<div class="everyday-row flex flex--col"><span class="label label--small">{{ row.time | escape }}</span><span class="title title--small" data-clamp="2">{{ row.title | escape }}</span><span class="label label--small">{{ row.detail | escape }}</span></div>
+{% endfor %}</div>
+<div class="flex flex--col gap--small"><canvas class="everyday-qr" data-size="{{ qr_size | plus: 0 }}" data-bits="{{ qr_bits | escape }}" data-scale="3" aria-label="QR code to confirm the first task"></canvas><span class="label label--small" data-clamp="1">Scan to confirm first task</span></div></div>
+</div>
+<div class="title_bar"><span class="title">{{ title | escape }}</span><span class="instance">{{ updated | escape }}</span></div>
+{% else %}<div class="layout layout--col layout--center"><span class="title">Connect your tasks</span><span class="description">Configure and run the maintenance collector.</span></div><div class="title_bar"><span class="title">Home Maintenance</span></div>{% endif %}

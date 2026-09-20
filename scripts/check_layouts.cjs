@@ -4,6 +4,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { pathToFileURL } = require('node:url');
 const assert = require('node:assert/strict');
+const jsQR = require('jsqr');
 const root = path.resolve(__dirname, '..');
 
 (async () => {
@@ -33,6 +34,14 @@ const root = path.resolve(__dirname, '..');
         assert.ok(bounds.overflowY <= 2, `${slug}/${view}: vertical overflow ${bounds.overflowY}`);
         assert.ok(bounds.footerOutside <= 2, `${slug}/${view}: footer outside screen`);
         assert.deepEqual(errors, [], `${slug}/${view}: browser errors`);
+        if (slug === 'maintenance') {
+          const pixels = await page.locator(`.view--${view} canvas.everyday-qr`).first().evaluate(canvas => ({
+            width: canvas.width, height: canvas.height,
+            data: Array.from(canvas.getContext('2d').getImageData(0, 0, canvas.width, canvas.height).data)
+          }));
+          const code = jsQR(new Uint8ClampedArray(pixels.data), pixels.width, pixels.height);
+          assert.equal(code?.data, 'https://example.invalid/maintenance-demo', `${slug}/${view}: unreadable demo QR`);
+        }
         const out = path.join(root, 'docs', 'previews');
         fs.mkdirSync(out, {recursive: true});
         if (view === 'full') await page.screenshot({path: path.join(out, `${slug}.png`)});

@@ -14,6 +14,7 @@ The collector runs on your computer or home server; no account with us is needed
 | [Shift Together](plugins/shifts) | Shift rotas, exceptions and shared time off |
 | [Homelab Watch](plugins/homelab) | Disk space, service health and backup freshness |
 | [Digital Product Sales](plugins/sales) | Sales, renewals and refunds from local CSV exports |
+| [Home Maintenance](plugins/maintenance) | Recurring household tasks and QR completion |
 
 ## Install
 
